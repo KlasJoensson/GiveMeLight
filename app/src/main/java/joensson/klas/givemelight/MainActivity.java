@@ -1,11 +1,14 @@
 package joensson.klas.givemelight;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.NumberPicker;
 
 
@@ -34,6 +37,9 @@ public class MainActivity extends ActionBarActivity {
 
         colorPreview = (SurfaceView) findViewById(R.id.colorPreview);
         colorPreview.setBackgroundColor(getColor());
+
+        Button showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
+        showLightBoardButton.setOnClickListener(openLightBoardListener);
     }
 
     private void setUpNumberPicker(NumberPicker numberPicker) {
@@ -98,4 +104,14 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    View.OnClickListener openLightBoardListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent showLBIntent = new Intent(MainActivity.this, LightBoard.class);
+            showLBIntent.putExtra("color", getColor());
+
+            startActivity(showLBIntent);
+        }
+    };
 }

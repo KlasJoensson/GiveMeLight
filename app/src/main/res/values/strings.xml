@@ -11,4 +11,7 @@
     <string name="green_txt">Green</string>
     <string name="blue_txt">Blue</string>
     <string name="alpha_txt">Alpha</string>
+    <string name="title_activity_light_board">LightBoard</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>
