@@ -4,6 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/background_color"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
     android:weightSum="1">
 
@@ -12,6 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/font_color"
         android:layout_gravity="center_horizontal" />
 
     <ToggleButton
@@ -26,7 +28,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/space"
-        android:id="@+id/breakLine"
         android:layout_gravity="center_horizontal" />
 
     <ImageView
@@ -46,6 +47,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/Light_board_txt"
+        android:textColor="@color/font_color"
         android:layout_gravity="center_horizontal" />
 
     <Button
@@ -74,6 +76,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/set_color_txt"
+            android:textColor="@color/font_color"
             android:id="@+id/textView" />
 
         <SurfaceView
@@ -115,6 +118,7 @@
                 android:labelFor="@+id/redNumberPicker"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/red_txt"
+                android:textColor="@color/font_color"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 
@@ -139,6 +143,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/green_txt"
                 android:layout_alignParentTop="true"
+                android:textColor="@color/font_color"
                 android:layout_centerHorizontal="true" />
 
             <NumberPicker
@@ -160,6 +165,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/blue_txt"
+                android:textColor="@color/font_color"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 
@@ -182,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/alpha_txt"
-                android:id="@+id/textView2"
+                android:textColor="@color/font_color"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 
@@ -190,7 +196,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/alphaNumberPicker"
-                android:layout_below="@+id/textView2"
+                android:layout_centerVertical="true"
                 android:layout_alignParentStart="true" />
         </RelativeLayout>
     </LinearLayout>
