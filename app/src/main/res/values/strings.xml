@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">GiveMeLight</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="flashlight_txt">Flashlight</string>
+    <string name="space"> </string>
+    <string name="Light_board_txt">Light board controls</string>
+    <string name="show_lb_button_txt">View light board</string>
+    <string name="set_color_txt">Colour settings:</string>
+    <string name="red_txt">Red</string>
+    <string name="green_txt">Green</string>
+    <string name="blue_txt">Blue</string>
+    <string name="alpha_txt">Alpha</string>
 </resources>
