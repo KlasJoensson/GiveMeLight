@@ -79,7 +79,7 @@
         <SurfaceView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:id="@+id/surfaceView"
+            android:id="@+id/colorPreview"
             android:layout_gravity="center_vertical"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/textView"
