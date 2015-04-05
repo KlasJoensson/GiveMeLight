@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 
 
@@ -40,6 +41,14 @@ public class MainActivity extends ActionBarActivity {
 
         Button showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
         showLightBoardButton.setOnClickListener(openLightBoardListener);
+
+        ImageView div = (ImageView) findViewById(R.id.dividerImage);
+        div.setImageResource(R.drawable.chain);
+
+        ImageView flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
+        flashlightImg.setImageResource(R.drawable.flashlight_off);
+        //ToggleButton flashlight = (ToggleButton) findViewById(R.id.flashOnOffButton);
+
     }
 
     private void setUpNumberPicker(NumberPicker numberPicker) {
