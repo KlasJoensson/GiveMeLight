@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.ToggleButton;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -20,6 +21,9 @@ public class MainActivity extends ActionBarActivity {
     private NumberPicker blueNumberPicker;
     private NumberPicker alphaNumberPicker;
     private SurfaceView colorPreview;
+    private ToggleButton flashlight;
+    private ImageView flashlightImg;
+
     private static final int START_COLOR_AND_ALPHA_VALUE = 255;
 
     @Override
@@ -45,10 +49,10 @@ public class MainActivity extends ActionBarActivity {
         ImageView div = (ImageView) findViewById(R.id.dividerImage);
         div.setImageResource(R.drawable.chain);
 
-        ImageView flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
+        flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
         flashlightImg.setImageResource(R.drawable.flashlight_off);
-        //ToggleButton flashlight = (ToggleButton) findViewById(R.id.flashOnOffButton);
-
+        flashlight = (ToggleButton) findViewById(R.id.flashOnOffButton);
+        flashlight.setOnClickListener(flashlightListener);
     }
 
     private void setUpNumberPicker(NumberPicker numberPicker) {
@@ -114,13 +118,26 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    View.OnClickListener openLightBoardListener = new View.OnClickListener() {
+    private View.OnClickListener openLightBoardListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent showLBIntent = new Intent(MainActivity.this, LightBoard.class);
             showLBIntent.putExtra("color", getColor());
 
             startActivity(showLBIntent);
+        }
+    };
+
+    private View.OnClickListener flashlightListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (flashlight.isChecked()) {
+                // Flashlight is off, let's turn it on
+                flashlightImg.setImageResource(R.drawable.flashlight_on);
+            } else {
+                // Flashlight is on, let's turn it off
+                flashlightImg.setImageResource(R.drawable.flashlight_off);
+            }
         }
     };
 }
