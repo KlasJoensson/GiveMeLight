@@ -209,7 +209,7 @@ public class MainActivity extends ActionBarActivity {
                 // Flashlight is off, let's turn it on
                 flashlightImg.setImageResource(R.drawable.flashlight_on);
                 try {
-                    flashlight.turnOnFlash();
+                        flashlight.turnOnFlash();
                 } catch (IOException e) {
                     Log.e("Flash error: ", e.getMessage());
                 }
