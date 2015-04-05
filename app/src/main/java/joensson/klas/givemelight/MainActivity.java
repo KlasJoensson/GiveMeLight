@@ -1,9 +1,12 @@
 package joensson.klas.givemelight;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -13,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ToggleButton;
 
+import java.io.IOException;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -21,8 +26,9 @@ public class MainActivity extends ActionBarActivity {
     private NumberPicker blueNumberPicker;
     private NumberPicker alphaNumberPicker;
     private SurfaceView colorPreview;
-    private ToggleButton flashlight;
+    private ToggleButton flashlightButton;
     private ImageView flashlightImg;
+    private Flashlight flashlight;
 
     private static final int START_COLOR_AND_ALPHA_VALUE = 255;
 
@@ -51,8 +57,14 @@ public class MainActivity extends ActionBarActivity {
 
         flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
         flashlightImg.setImageResource(R.drawable.flashlight_off);
-        flashlight = (ToggleButton) findViewById(R.id.flashOnOffButton);
-        flashlight.setOnClickListener(flashlightListener);
+        flashlightButton = (ToggleButton) findViewById(R.id.flashOnOffButton);
+
+        try {
+            flashlight = Flashlight.getInstance();
+            flashlightButton.setOnClickListener(flashlightListener);
+        } catch (IOException e) {
+            createFlashErrorDialog();
+        }
     }
 
     private void setUpNumberPicker(NumberPicker numberPicker) {
@@ -118,6 +130,68 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            if (flashlight == null) {
+                flashlight = Flashlight.getInstance();
+            }
+
+            flashlight.activateCamera();
+        } catch (IOException e) {
+            createFlashErrorDialog();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (flashlight != null) {
+            try {
+                flashlight.activateCamera();
+            } catch (IOException e) {
+                Log.e("Flash error: ", e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        flashlightImg.setImageResource(R.drawable.flashlight_off);
+        try {
+            if (flashlight != null)
+                flashlight.turnOffFlash();
+        } catch (IOException e) {
+            Log.e("Flash error: ", e.getMessage());
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (flashlight != null)
+            flashlight.closeCamera();
+    }
+
+    private void createFlashErrorDialog() {
+        AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+                .create();
+        alert.setTitle("Error");
+        alert.setMessage(getString(R.string.flash_error_message));
+        alert.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // If there's no support for a flash light, let's disable the button
+                flashlightButton.setEnabled(false);
+            }
+        });
+        alert.show();
+    }
+
     private View.OnClickListener openLightBoardListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -131,12 +205,22 @@ public class MainActivity extends ActionBarActivity {
     private View.OnClickListener flashlightListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (flashlight.isChecked()) {
+            if (flashlightButton.isChecked()) {
                 // Flashlight is off, let's turn it on
                 flashlightImg.setImageResource(R.drawable.flashlight_on);
+                try {
+                    flashlight.turnOnFlash();
+                } catch (IOException e) {
+                    Log.e("Flash error: ", e.getMessage());
+                }
             } else {
                 // Flashlight is on, let's turn it off
                 flashlightImg.setImageResource(R.drawable.flashlight_off);
+                try {
+                    flashlight.turnOffFlash();
+                } catch (IOException e) {
+                    Log.e("Flash error: ", e.getMessage());
+                }
             }
         }
     };
