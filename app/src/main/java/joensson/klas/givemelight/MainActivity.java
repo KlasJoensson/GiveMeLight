@@ -58,13 +58,7 @@ public class MainActivity extends ActionBarActivity {
         flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
         flashlightImg.setImageResource(R.drawable.flashlight_off);
         flashlightButton = (ToggleButton) findViewById(R.id.flashOnOffButton);
-
-        try {
-            flashlight = Flashlight.getInstance();
-            flashlightButton.setOnClickListener(flashlightListener);
-        } catch (IOException e) {
-            createFlashErrorDialog();
-        }
+        flashlightButton.setOnClickListener(flashlightListener);
     }
 
     private void setUpNumberPicker(NumberPicker numberPicker) {
@@ -133,6 +127,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
+
         try {
             if (flashlight == null) {
                 flashlight = Flashlight.getInstance();
@@ -148,13 +143,6 @@ public class MainActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
 
-        if (flashlight != null) {
-            try {
-                flashlight.activateCamera();
-            } catch (IOException e) {
-                Log.e("Flash error: ", e.getMessage());
-            }
-        }
     }
 
     @Override
@@ -183,7 +171,7 @@ public class MainActivity extends ActionBarActivity {
                 .create();
         alert.setTitle("Error");
         alert.setMessage(getString(R.string.flash_error_message));
-        alert.setButton("OK", new DialogInterface.OnClickListener() {
+        alert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // If there's no support for a flash light, let's disable the button
                 flashlightButton.setEnabled(false);
