@@ -18,7 +18,6 @@ import android.widget.ToggleButton;
 
 import java.io.IOException;
 
-
 public class MainActivity extends ActionBarActivity {
 
     private NumberPicker redNumberPicker;
@@ -61,6 +60,11 @@ public class MainActivity extends ActionBarActivity {
         flashlightButton.setOnClickListener(flashlightListener);
     }
 
+    /**
+     * Sets the max, min and default value on the number pickers. Also adds a listener.
+     *
+     * @param numberPicker The number picker to be set up.
+     */
     private void setUpNumberPicker(NumberPicker numberPicker) {
         numberPicker.setMaxValue(255);
         numberPicker.setMinValue(0);
@@ -73,11 +77,19 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+    /**
+     * Changes the color on the light board preview,
+     */
     private void changeColorPreview() {
         int color = getColor();
         colorPreview.setBackgroundColor(color);
     }
 
+    /**
+     * Figure out what color that has been set by the user via number pickers.
+     *
+     * @return An integer corresponding to the selected color.
+     */
     private int getColor() {
         int red, green, blue, alpha;
         if (redNumberPicker != null)
@@ -166,6 +178,9 @@ public class MainActivity extends ActionBarActivity {
             flashlight.closeCamera();
     }
 
+    /**
+     * Creates and views the error dialog used when the flash isn't supported by the device.
+     */
     private void createFlashErrorDialog() {
         AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
                 .create();
@@ -180,6 +195,10 @@ public class MainActivity extends ActionBarActivity {
         alert.show();
     }
 
+    /**
+     * The listener that listen to the show-light-board-button and controls the actions taken when
+     * it's pressed.
+     */
     private View.OnClickListener openLightBoardListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -190,6 +209,10 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    /**
+     * The listener that listen to the flashlight button and controls the action taken when it's
+     * pressed.
+     */
     private View.OnClickListener flashlightListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {

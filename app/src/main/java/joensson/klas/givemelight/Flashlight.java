@@ -4,8 +4,7 @@ import android.hardware.Camera;
 
 import java.io.IOException;
 
-/**
- * Created by klas on 2015-04-05.
+/**.
  * The class android.hardware.Camera is deprecated in api level 21, this might not run on newer devises!
  */
 public class Flashlight {
@@ -27,6 +26,11 @@ public class Flashlight {
        activateCamera();
     }
 
+    /**
+     * Turns the flash on.Throws an exception if the camera don't work properly for some reason.
+     *
+     * @throws IOException
+     */
     public void turnOnFlash() throws IOException {
         if (camera == null || parameters == null) {
             activateCamera();
@@ -39,6 +43,11 @@ public class Flashlight {
         isFlashOn = true;
     }
 
+    /**
+     * Turns the flash off.Throws an exception if the camera don't work properly for some reason.
+     *
+     * @throws IOException
+     */
     public void turnOffFlash() throws IOException {
         if (camera == null || parameters == null) {
             activateCamera();
@@ -51,6 +60,12 @@ public class Flashlight {
         isFlashOn = false;
     }
 
+    /**
+     * Activates , i.e. opens, the camera. Throws an exception if the camera don't work properly
+     * for some reason.
+     *
+     * @throws IOException
+     */
     public void activateCamera() throws IOException {
         try {
             camera = Camera.open();
@@ -65,6 +80,9 @@ public class Flashlight {
         }
     }
 
+    /**
+     * Closes the camera, i.e. releases the camera resource so an other device may use it.
+     */
     public void closeCamera() {
         if (camera != null)
             camera.release();

@@ -1,15 +1,15 @@
 package joensson.klas.givemelight;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 
-public class LightBoard extends ActionBarActivity {
+public class LightBoard extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
