@@ -84,7 +84,23 @@ public class Flashlight {
      * Closes the camera, i.e. releases the camera resource so an other device may use it.
      */
     public void closeCamera() {
+        if(isFlashOn) {
+            try {
+                turnOffFlash();
+            } catch (IOException e) {
+                // TODO Logg exeption? Something else?
+            }
+        }
         if (camera != null)
             camera.release();
+    }
+
+    /**
+     * Returns the status of the flash-light,
+     *
+     * @return true if the flash-light is on
+     */
+    public boolean isFlashOn() {
+        return isFlashOn;
     }
 }
