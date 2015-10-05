@@ -145,7 +145,6 @@ public class MainActivity extends ActionBarActivity {
                 flashlight = Flashlight.getInstance();
             }
 
-            flashlight.activateCamera();
         } catch (IOException e) {
             createFlashErrorDialog();
         }
@@ -155,8 +154,22 @@ public class MainActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
 
+        try {
+            if (flashlight == null) {
+                flashlight = Flashlight.getInstance();
+            }
+            flashlightButton.setChecked(flashlight.isFlashOn());
+            if (flashlight.isFlashOn()) {
+                flashlightImg.setImageResource(R.drawable.flashlight_on);
+            } else {
+                flashlightImg.setImageResource(R.drawable.flashlight_off);
+            }
+        } catch (IOException e) {
+            createFlashErrorDialog();
+        }
     }
 
+    // TODO Should it really turn of the flashlight on pause?
     @Override
     public void onPause() {
         super.onPause();
