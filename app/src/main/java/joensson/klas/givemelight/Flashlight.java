@@ -1,6 +1,7 @@
 package joensson.klas.givemelight;
 
 import android.hardware.Camera;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -88,7 +89,7 @@ public class Flashlight {
             try {
                 turnOffFlash();
             } catch (IOException e) {
-                // TODO Logg exeption? Something else?
+                Log.e("Closing camera", "Can't turn of the flash properly", e);
             }
         }
         if (camera != null)
