@@ -93,7 +93,6 @@ public class MainActivity extends ActionBarActivity {
     private int getColor() {
         int red, green, blue, alpha;
         if (redNumberPicker != null)
-
             red = redNumberPicker.getValue();
         else
             red = START_COLOR_AND_ALPHA_VALUE;
@@ -146,6 +145,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
         } catch (IOException e) {
+            Log.e("On start","Could not find the camera: " + e.getMessage());
             createFlashErrorDialog();
         }
     }
@@ -165,6 +165,7 @@ public class MainActivity extends ActionBarActivity {
                 flashlightImg.setImageResource(R.drawable.flashlight_off);
             }
         } catch (IOException e) {
+            Log.e("On resume","Could not find the camera: " + e.getMessage());
             createFlashErrorDialog();
         }
     }
@@ -179,14 +180,10 @@ public class MainActivity extends ActionBarActivity {
     public void onStop() {
         super.onStop();
 
-        try {
-            if (flashlight != null)
-                flashlight.turnOffFlash();
-                flashlightImg.setImageResource(R.drawable.flashlight_off);
-                flashlightButton.setChecked(false);
-                flashlight.closeCamera();
-        } catch (IOException e) {
-            Log.e("Flash error: ", e.getMessage());
+        if (flashlight != null) {
+            flashlight.closeCamera();
+            flashlightImg.setImageResource(R.drawable.flashlight_off);
+            flashlightButton.setChecked(false);
         }
 
     }
@@ -195,8 +192,7 @@ public class MainActivity extends ActionBarActivity {
      * Creates and views the error dialog used when the flash isn't supported by the device.
      */
     private void createFlashErrorDialog() {
-        AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
-                .create();
+        AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
         alert.setTitle("Error");
         alert.setMessage(getString(R.string.flash_error_message));
         alert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
@@ -233,7 +229,7 @@ public class MainActivity extends ActionBarActivity {
                 // Flashlight is off, let's turn it on
                 flashlightImg.setImageResource(R.drawable.flashlight_on);
                 try {
-                        flashlight.turnOnFlash();
+                    flashlight.turnOnFlash();
                 } catch (IOException e) {
                     Log.e("Flash error: ", e.getMessage());
                 }

@@ -77,23 +77,27 @@ public class Flashlight {
                 isFlashOn = false;
             }
         } catch (Exception e) {
+            Log.e("In Activate Camera","Error: "+e.getMessage(), e);
             throw new IOException("Could not access camera");
         }
     }
 
     /**
-     * Closes the camera, i.e. releases the camera resource so an other device may use it.
+     * Closes the camera, i.e. releases the camera resource so an other device may use it and if the
+     * flashlight is on torn it off.
      */
     public void closeCamera() {
-        if(isFlashOn) {
-            try {
-                turnOffFlash();
-            } catch (IOException e) {
-                Log.e("Closing camera", "Can't turn of the flash properly", e);
+        if (camera != null) {
+            if (isFlashOn) {
+                try {
+                    turnOffFlash();
+                } catch (IOException e) {
+                    Log.e("Closing camera", "Can't turn of the flash properly", e);
+                }
             }
-        }
-        if (camera != null)
+
             camera.release();
+        }
     }
 
     /**
