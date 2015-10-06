@@ -169,26 +169,26 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    // TODO Should it really turn of the flashlight on pause?
     @Override
     public void onPause() {
         super.onPause();
 
-        flashlightImg.setImageResource(R.drawable.flashlight_off);
-        try {
-            if (flashlight != null)
-                flashlight.turnOffFlash();
-        } catch (IOException e) {
-            Log.e("Flash error: ", e.getMessage());
-        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        if (flashlight != null)
-            flashlight.closeCamera();
+        try {
+            if (flashlight != null)
+                flashlight.turnOffFlash();
+                flashlightImg.setImageResource(R.drawable.flashlight_off);
+                flashlightButton.setChecked(false);
+                flashlight.closeCamera();
+        } catch (IOException e) {
+            Log.e("Flash error: ", e.getMessage());
+        }
+
     }
 
     /**
