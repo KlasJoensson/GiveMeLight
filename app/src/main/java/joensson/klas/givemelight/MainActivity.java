@@ -158,6 +158,7 @@ public class MainActivity extends ActionBarActivity {
             if (flashlight == null) {
                 flashlight = Flashlight.getInstance();
             }
+            flashlight.activateCamera();
             flashlightButton.setChecked(flashlight.isFlashOn());
             if (flashlight.isFlashOn()) {
                 flashlightImg.setImageResource(R.drawable.flashlight_on);

@@ -12,7 +12,7 @@ public class Flashlight {
 
     private Camera camera;
     private Camera.Parameters parameters;
-    private boolean isFlashOn = false;
+    private boolean isFlashOn;
     private static Flashlight myInstance;
 
     public static Flashlight getInstance() throws IOException {
@@ -24,7 +24,7 @@ public class Flashlight {
     }
 
     private Flashlight() throws IOException {
-       activateCamera();
+        isFlashOn = false;
     }
 
     /**
@@ -54,7 +54,7 @@ public class Flashlight {
             activateCamera();
         }
 
-        parameters = camera.getParameters();
+        //parameters = camera.getParameters();
         parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         camera.setParameters(parameters);
         camera.stopPreview();
