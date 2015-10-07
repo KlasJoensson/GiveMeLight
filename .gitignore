@@ -1,0 +1,16 @@
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+.gitignore~
+app/.gitignore
+app/app.iml
+app/build.gradle
+app/proguard-rules.pro
+build.gradle
+gradle.properties
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
