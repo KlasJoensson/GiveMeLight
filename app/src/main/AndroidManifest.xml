@@ -26,8 +26,6 @@
             android:name=".LightBoard"
             android:label="@string/title_activity_light_board" >
         </activity>
-        <activity android:name=".MainActivityLandscape" >
-        </activity>
     </application>
 
 </manifest>

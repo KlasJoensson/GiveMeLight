@@ -1,6 +1,5 @@
 package joensson.klas.givemelight;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +9,10 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -30,7 +29,10 @@ public class MainActivity extends ActionBarActivity {
     private SurfaceView colorPreview;
     private ToggleButton flashlightButton;
     private ImageView flashlightImg;
+    private Button showLightBoardButton;
+    private ImageView div;
     private Flashlight flashlight;
+    private boolean rotationLocked;
 
     private static final int START_COLOR_AND_ALPHA_VALUE = 255;
 
@@ -40,27 +42,30 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         redNumberPicker = (NumberPicker) findViewById(R.id.redNumberPicker);
-        setUpNumberPicker(redNumberPicker);
+        setUpNumberPicker(redNumberPicker, START_COLOR_AND_ALPHA_VALUE);
         greenNumberPicker =(NumberPicker) findViewById(R.id.greenNumberPicker);
-        setUpNumberPicker(greenNumberPicker);
+        setUpNumberPicker(greenNumberPicker, START_COLOR_AND_ALPHA_VALUE);
         blueNumberPicker = (NumberPicker) findViewById(R.id.blueNumberPicker);
-        setUpNumberPicker(blueNumberPicker);
+        setUpNumberPicker(blueNumberPicker, START_COLOR_AND_ALPHA_VALUE);
         alphaNumberPicker = (NumberPicker) findViewById(R.id.alphaNumberPicker);
-        setUpNumberPicker(alphaNumberPicker);
+        setUpNumberPicker(alphaNumberPicker, START_COLOR_AND_ALPHA_VALUE);
 
         colorPreview = (SurfaceView) findViewById(R.id.colorPreview);
         colorPreview.setBackgroundColor(getColor());
 
-        Button showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
+        showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
         showLightBoardButton.setOnClickListener(openLightBoardListener);
 
-        ImageView div = (ImageView) findViewById(R.id.dividerImage);
+        div = (ImageView) findViewById(R.id.dividerImage);
         div.setImageResource(R.drawable.chain);
 
-        flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
-        flashlightImg.setImageResource(R.drawable.flashlight_off);
         flashlightButton = (ToggleButton) findViewById(R.id.flashOnOffButton);
         flashlightButton.setOnClickListener(flashlightListener);
+        flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
+        flashlightButton.setChecked(false);
+        flashlightImg.setImageResource(R.drawable.flashlight_off);
+
+        rotationLocked = false;
     }
 
     /**
@@ -68,10 +73,10 @@ public class MainActivity extends ActionBarActivity {
      *
      * @param numberPicker The number picker to be set up.
      */
-    private void setUpNumberPicker(NumberPicker numberPicker) {
+    private void setUpNumberPicker(NumberPicker numberPicker, int value) {
         numberPicker.setMaxValue(255);
         numberPicker.setMinValue(0);
-        numberPicker.setValue(START_COLOR_AND_ALPHA_VALUE);
+        numberPicker.setValue(value);
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i2) {
@@ -161,11 +166,112 @@ public class MainActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (rotationLocked) {
+            // TODO Break out to own method, keepOrientation()
+            // Can I use this instead? setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+            Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+            int orientation = display.getRotation();
+            switch(orientation) {
+                case Configuration.ORIENTATION_PORTRAIT:
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    break;
+                case Configuration.ORIENTATION_LANDSCAPE:
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    break;
+            }
+        } else {
+            if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                setUpLandscapeView();
+            } else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                setUpPortraitView();
+            }
         }
+
+    }
+
+    /**
+     * Makes the landscape layout look and behave correct
+     */
+    private void setUpLandscapeView() {
+        int[] numberPickerValues = getNumberPickersValues();
+        setContentView(R.layout.main_activity_landscape);
+        setUpCommonViews(numberPickerValues);
+    }
+
+    /**
+     * Makes the portrait layout look and behave correct
+     */
+    private void setUpPortraitView() {
+        int[] numberPickerValues = getNumberPickersValues();
+        setContentView(R.layout.activity_main);
+        setUpCommonViews(numberPickerValues);
+    }
+
+    /**
+     * Sets up the views that the both layouts has in common, to not loos the values of the number
+     * pickers they hav to be given to the method. This is done with an array of integers, formatted
+     * like this: {red value, green value, blue value, alpha value}.
+     *
+     * @param numberPickerValues The values of the number pickers
+     */
+    private void setUpCommonViews(int[] numberPickerValues) {
+        flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
+        flashlightButton = (ToggleButton) findViewById(R.id.flashOnOffButton);
+        flashlightButton.setChecked(flashlight.isFlashOn());
+        if (flashlight.isFlashOn()) {
+            flashlightImg.setImageResource(R.drawable.flashlight_on);
+        } else {
+            flashlightImg.setImageResource(R.drawable.flashlight_off);
+        }
+        flashlightButton.setOnClickListener(flashlightListener);
+
+        redNumberPicker = (NumberPicker) findViewById(R.id.redNumberPicker);
+        setUpNumberPicker(redNumberPicker, numberPickerValues[0]);
+        greenNumberPicker =(NumberPicker) findViewById(R.id.greenNumberPicker);
+        setUpNumberPicker(greenNumberPicker, numberPickerValues[1]);
+        blueNumberPicker = (NumberPicker) findViewById(R.id.blueNumberPicker);
+        setUpNumberPicker(blueNumberPicker, numberPickerValues[2]);
+        alphaNumberPicker = (NumberPicker) findViewById(R.id.alphaNumberPicker);
+        setUpNumberPicker(alphaNumberPicker, numberPickerValues[3]);
+
+        showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
+        showLightBoardButton.setOnClickListener(openLightBoardListener);
+
+        colorPreview = (SurfaceView) findViewById(R.id.colorPreview);
+        colorPreview.setBackgroundColor(getColor());
+
+        div = (ImageView) findViewById(R.id.dividerImage);
+        div.setImageResource(R.drawable.chain);
+    }
+
+    /**
+     * Reads the values of the number pickers and returns them in an array of integers. If it can't
+     * find an number picker it will return the value set in the static variable
+     * START_COLOR_AND_ALPHA_VALUE instead.
+     * The formart of the returned array is {red value, green value, blue value, alpha value}.
+     *
+     * @return An array with the values of the number pickers
+     */
+    private int[] getNumberPickersValues() {
+        int[] values = new int[4];
+        if (redNumberPicker != null)
+            values[0] = redNumberPicker.getValue();
+        else
+            values[0] = START_COLOR_AND_ALPHA_VALUE;
+        if (greenNumberPicker != null)
+            values[1] = greenNumberPicker.getValue();
+        else
+            values[1] = START_COLOR_AND_ALPHA_VALUE;
+        if (blueNumberPicker != null)
+            values[2] = blueNumberPicker.getValue();
+        else
+            values[2] = START_COLOR_AND_ALPHA_VALUE;
+        if (alphaNumberPicker != null)
+            values[3] = alphaNumberPicker.getValue();
+        else
+            values[3] = START_COLOR_AND_ALPHA_VALUE;
+
+        return values;
     }
 
     @Override

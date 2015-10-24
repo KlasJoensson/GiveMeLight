@@ -16,4 +16,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="flashlightImgDesc">An image showing if the flashlight is on or off</string>
     <string name="flash_error_message">Sorry, your device does not support flash light!</string>
+    <string name="divImageTxt">An image to make up a border</string>
 </resources>
