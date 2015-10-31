@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
     private SurfaceView colorPreview;
     private ToggleButton flashlightButton;
     private ImageView flashlightImg;
-    private Button showLightBoardButton;
     private ImageView div;
     private Flashlight flashlight;
     private Menu myMenu;
@@ -44,43 +43,24 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-        int orientation = display.getRotation();
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-            setContentView(R.layout.main_activity_landscape);
-        else
-            setContentView(R.layout.activity_main);
-
-       /*int[] numberPickerValues = {START_COLOR_AND_ALPHA_VALUE,
+        int[] numberPickerValues = {START_COLOR_AND_ALPHA_VALUE,
                 START_COLOR_AND_ALPHA_VALUE,
                 START_COLOR_AND_ALPHA_VALUE,
                 START_COLOR_AND_ALPHA_VALUE};
 
-        setUpCommonViews(numberPickerValues);*/
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        int orientation = display.getRotation();
+        if (orientation == Surface.ROTATION_0 || orientation == Surface.ROTATION_270) {
+            setContentView(R.layout.activity_main);
+            setUpCommonViews(numberPickerValues, false);
+            div.setImageResource(R.drawable.chain);
+        } else {
+            setContentView(R.layout.main_activity_landscape);
+            setUpCommonViews(numberPickerValues, false);
+            div.setImageResource(R.drawable.chain_landscape);
+        }
 
-        redNumberPicker = (NumberPicker) findViewById(R.id.redNumberPicker);
-        setUpNumberPicker(redNumberPicker, START_COLOR_AND_ALPHA_VALUE);
-        greenNumberPicker =(NumberPicker) findViewById(R.id.greenNumberPicker);
-        setUpNumberPicker(greenNumberPicker, START_COLOR_AND_ALPHA_VALUE);
-        blueNumberPicker = (NumberPicker) findViewById(R.id.blueNumberPicker);
-        setUpNumberPicker(blueNumberPicker, START_COLOR_AND_ALPHA_VALUE);
-        alphaNumberPicker = (NumberPicker) findViewById(R.id.alphaNumberPicker);
-        setUpNumberPicker(alphaNumberPicker, START_COLOR_AND_ALPHA_VALUE);
-
-        colorPreview = (SurfaceView) findViewById(R.id.colorPreview);
-        colorPreview.setBackgroundColor(getColor());
-
-        showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
-        showLightBoardButton.setOnClickListener(openLightBoardListener);
-
-        div = (ImageView) findViewById(R.id.dividerImage);
-        div.setImageResource(R.drawable.chain);
-
-        flashlightButton = (ToggleButton) findViewById(R.id.flashOnOffButton);
-        flashlightButton.setOnClickListener(flashlightListener);
-        flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
         flashlightButton.setChecked(false);
-        flashlightImg.setImageResource(R.drawable.flashlight_off);
 
         rotationLocked = false;
     }
@@ -323,7 +303,8 @@ public class MainActivity extends ActionBarActivity {
     private void setUpLandscapeView() {
         int[] numberPickerValues = getNumberPickersValues();
         setContentView(R.layout.main_activity_landscape);
-        setUpCommonViews(numberPickerValues);
+        setUpCommonViews(numberPickerValues, true);
+        div.setImageResource(R.drawable.chain_landscape);
     }
 
     /**
@@ -332,7 +313,8 @@ public class MainActivity extends ActionBarActivity {
     private void setUpPortraitView() {
         int[] numberPickerValues = getNumberPickersValues();
         setContentView(R.layout.activity_main);
-        setUpCommonViews(numberPickerValues);
+        setUpCommonViews(numberPickerValues, true);
+        div.setImageResource(R.drawable.chain);
     }
 
     /**
@@ -342,14 +324,16 @@ public class MainActivity extends ActionBarActivity {
      *
      * @param numberPickerValues The values of the number pickers
      */
-    private void setUpCommonViews(int[] numberPickerValues) {
+    private void setUpCommonViews(int[] numberPickerValues, boolean checkCameraFlashStatus) {
         flashlightImg = (ImageView) findViewById(R.id.flashlightImage);
         flashlightButton = (ToggleButton) findViewById(R.id.flashOnOffButton);
-        flashlightButton.setChecked(flashlight.isFlashOn());
-        if (flashlight.isFlashOn()) {
-            flashlightImg.setImageResource(R.drawable.flashlight_on);
-        } else {
-            flashlightImg.setImageResource(R.drawable.flashlight_off);
+        if (checkCameraFlashStatus) {
+            flashlightButton.setChecked(flashlight.isFlashOn());
+            if (flashlight.isFlashOn()) {
+                flashlightImg.setImageResource(R.drawable.flashlight_on);
+            } else {
+                flashlightImg.setImageResource(R.drawable.flashlight_off);
+            }
         }
         flashlightButton.setOnClickListener(flashlightListener);
 
@@ -362,14 +346,14 @@ public class MainActivity extends ActionBarActivity {
         alphaNumberPicker = (NumberPicker) findViewById(R.id.alphaNumberPicker);
         setUpNumberPicker(alphaNumberPicker, numberPickerValues[3]);
 
-        showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
+        Button showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
         showLightBoardButton.setOnClickListener(openLightBoardListener);
 
         colorPreview = (SurfaceView) findViewById(R.id.colorPreview);
         colorPreview.setBackgroundColor(getColor());
 
         div = (ImageView) findViewById(R.id.dividerImage);
-        div.setImageResource(R.drawable.chain);
+
     }
 
     /**

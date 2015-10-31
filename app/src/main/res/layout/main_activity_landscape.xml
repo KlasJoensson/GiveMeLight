@@ -45,7 +45,6 @@
         android:layout_width="20dp"
         android:layout_height="match_parent"
         android:id="@+id/dividerImage"
-        android:rotation="90"
         android:contentDescription="@string/divImageTxt" />
 
     <TextView
