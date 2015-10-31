@@ -10,7 +10,7 @@
     tools:context="joensson.klas.givemelight.MainActivity"
     android:weightSum="1">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -23,23 +23,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/font_color"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/textView2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp" />
 
         <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/flashOnOffButton"
-            android:layout_marginStart="66dp"
-            android:layout_marginTop="40dp" />
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp" />
 
         <ImageView
             android:layout_width="82dp"
             android:layout_height="55dp"
             android:id="@+id/flashlightImage"
             android:contentDescription="@string/flashlightImgDesc"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/flashOnOffButton"
             android:layout_marginTop="25dp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="20dp"
