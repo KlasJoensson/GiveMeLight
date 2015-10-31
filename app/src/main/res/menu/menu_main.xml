@@ -1,6 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_only_landscape"
+        android:title="@string/only_landscape"
+        android:orderInCategory="100"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_only_portrait"
+        android:title="@string/only_portrait"
+        android:orderInCategory="100"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_enable_both"
+        android:title="@string/unlock_layout"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_lock_to_this"
+        android:title="@string/lock_layout"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

@@ -10,6 +10,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private Button showLightBoardButton;
     private ImageView div;
     private Flashlight flashlight;
+    private Menu myMenu;
     private boolean rotationLocked;
 
     private static final int START_COLOR_AND_ALPHA_VALUE = 255;
@@ -39,7 +43,20 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        int orientation = display.getRotation();
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+            setContentView(R.layout.main_activity_landscape);
+        else
+            setContentView(R.layout.activity_main);
+
+       /*int[] numberPickerValues = {START_COLOR_AND_ALPHA_VALUE,
+                START_COLOR_AND_ALPHA_VALUE,
+                START_COLOR_AND_ALPHA_VALUE,
+                START_COLOR_AND_ALPHA_VALUE};
+
+        setUpCommonViews(numberPickerValues);*/
 
         redNumberPicker = (NumberPicker) findViewById(R.id.redNumberPicker);
         setUpNumberPicker(redNumberPicker, START_COLOR_AND_ALPHA_VALUE);
@@ -66,6 +83,112 @@ public class MainActivity extends ActionBarActivity {
         flashlightImg.setImageResource(R.drawable.flashlight_off);
 
         rotationLocked = false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.myMenu = menu;
+        updateMenu();
+
+        return true;
+    }
+
+    /**
+     * To be called when an action happened that might influence the menu, i.e. the rotation
+     * is looked.
+     */
+    private void updateMenu() {
+        MenuItem menuItem, menuItem1;
+
+        if (myMenu != null) {
+            menuItem = myMenu.findItem(R.id.action_lock_to_this);
+            menuItem.setVisible(!rotationLocked);
+            menuItem = myMenu.findItem(R.id.action_enable_both);
+            menuItem.setVisible(rotationLocked);
+
+            menuItem = myMenu.findItem(R.id.action_only_landscape);
+            menuItem1 = myMenu.findItem(R.id.action_only_portrait);
+            if (rotationLocked) {
+                switch (getRequestedOrientation()) {
+                    case Configuration.ORIENTATION_PORTRAIT:
+                        menuItem1.setChecked(true);
+                        if (menuItem.isChecked())
+                            menuItem.setChecked(false);
+                        break;
+                    case Configuration.ORIENTATION_LANDSCAPE:
+                        menuItem.setChecked(true);
+                        if (menuItem1.isChecked())
+                            menuItem1.setChecked(false);
+                        break;
+                    default:
+                        checkLockedOrientation();
+                        break;
+                }
+            } else {
+                if (menuItem.isChecked())
+                    menuItem.setChecked(false);
+                if (menuItem1.isChecked())
+                    menuItem1.setChecked(false);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        rotationLocked = false;
+
+        switch (id) {
+            case R.id.action_only_landscape:
+                setUpLandscapeView();
+                rotationLocked = true;
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+
+            case R.id.action_only_portrait:
+                setUpPortraitView();
+                rotationLocked = true;
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+
+            case R.id.action_lock_to_this:
+                rotationLocked = true;
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+                break;
+
+            case R.id.action_enable_both:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                break;
+
+            default:
+                super.onOptionsItemSelected(item);
+        }
+
+        updateMenu();
+
+        return true;
+    }
+
+    /**
+     * Updates the checked menu items when rotation is locked by the option lock to current rotation
+     * of the device.
+     */
+    private void checkLockedOrientation() {
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        int orientation = display.getRotation();
+        MenuItem menuItemLandscape = myMenu.findItem(R.id.action_only_landscape);
+        MenuItem menuItemPortrait = myMenu.findItem(R.id.action_only_portrait);
+        if (orientation == Surface.ROTATION_0 || orientation == Surface.ROTATION_270) {
+            menuItemPortrait.setChecked(true);
+            if (menuItemLandscape.isChecked())
+                menuItemLandscape.setChecked(false);
+        }else {
+            menuItemLandscape.setChecked(true);
+            if (menuItemPortrait.isChecked())
+                menuItemPortrait.setChecked(false);
+        }
+
     }
 
     /**
@@ -167,18 +290,7 @@ public class MainActivity extends ActionBarActivity {
         super.onConfigurationChanged(newConfig);
 
         if (rotationLocked) {
-            // TODO Break out to own method, keepOrientation()
-            // Can I use this instead? setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-            Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-            int orientation = display.getRotation();
-            switch(orientation) {
-                case Configuration.ORIENTATION_PORTRAIT:
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                    break;
-                case Configuration.ORIENTATION_LANDSCAPE:
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    break;
-            }
+            keepOrientation();
         } else {
             if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 setUpLandscapeView();
@@ -187,6 +299,22 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+    }
+
+    /**
+     * Keeps the layout when the layout is locked.
+     */
+    private void keepOrientation() {
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        int orientation = display.getRotation();
+        switch(orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+            case Configuration.ORIENTATION_LANDSCAPE:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+        }
     }
 
     /**
