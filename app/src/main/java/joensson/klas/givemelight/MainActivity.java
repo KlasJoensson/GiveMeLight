@@ -16,7 +16,6 @@ import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ToggleButton;
@@ -335,7 +334,6 @@ public class MainActivity extends AppCompatActivity {
                 flashlightImg.setImageResource(R.drawable.flashlight_off);
             }
         }
-        flashlightButton.setOnClickListener(flashlightListener);
 
         redNumberPicker = (NumberPicker) findViewById(R.id.redNumberPicker);
         setUpNumberPicker(redNumberPicker, numberPickerValues[0]);
@@ -345,9 +343,6 @@ public class MainActivity extends AppCompatActivity {
         setUpNumberPicker(blueNumberPicker, numberPickerValues[2]);
         alphaNumberPicker = (NumberPicker) findViewById(R.id.alphaNumberPicker);
         setUpNumberPicker(alphaNumberPicker, numberPickerValues[3]);
-
-        Button showLightBoardButton = (Button) findViewById(R.id.openLightBoardButton);
-        showLightBoardButton.setOnClickListener(openLightBoardListener);
 
         colorPreview = (SurfaceView) findViewById(R.id.colorPreview);
         colorPreview.setBackgroundColor(getColor());
@@ -360,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
      * Reads the values of the number pickers and returns them in an array of integers. If it can't
      * find an number picker it will return the value set in the static variable
      * START_COLOR_AND_ALPHA_VALUE instead.
-     * The formart of the returned array is {red value, green value, blue value, alpha value}.
+     * The format of the returned array is {red value, green value, blue value, alpha value}.
      *
      * @return An array with the values of the number pickers
      */
@@ -415,43 +410,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * The listener that listen to the show-light-board-button and controls the actions taken when
-     * it's pressed.
+     * Starts the light board activity.
      */
-    private View.OnClickListener openLightBoardListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent showLBIntent = new Intent(MainActivity.this, LightBoard.class);
-            showLBIntent.putExtra("color", getColor());
+    public void openLightBoard(View view) {
+        Intent showLBIntent = new Intent(MainActivity.this, LightBoard.class);
+        showLBIntent.putExtra("color", getColor());
 
-            startActivity(showLBIntent);
-        }
-    };
+        startActivity(showLBIntent);
+    }
 
-    /**
-     * The listener that listen to the flashlight button and controls the action taken when it's
-     * pressed.
-     */
-    private View.OnClickListener flashlightListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (flashlightButton.isChecked()) {
-                // Flashlight is off, let's turn it on
-                flashlightImg.setImageResource(R.drawable.flashlight_on);
-                try {
-                    flashlight.turnOnFlash();
-                } catch (IOException e) {
-                    Log.e("Flash error: ", e.getMessage());
-                }
-            } else {
-                // Flashlight is on, let's turn it off
-                flashlightImg.setImageResource(R.drawable.flashlight_off);
-                try {
-                    flashlight.turnOffFlash();
-                } catch (IOException e) {
-                    Log.e("Flash error: ", e.getMessage());
-                }
+    public void turnFlashlightOnOff(View view) {
+        if (flashlightButton.isChecked()) {
+            // Flashlight is off, let's turn it on
+            flashlightImg.setImageResource(R.drawable.flashlight_on);
+            try {
+                flashlight.turnOnFlash();
+            } catch (IOException e) {
+                Log.e("Flash error: ", e.getMessage());
+            }
+        } else {
+            // Flashlight is on, let's turn it off
+            flashlightImg.setImageResource(R.drawable.flashlight_off);
+            try {
+                flashlight.turnOffFlash();
+            } catch (IOException e) {
+                Log.e("Flash error: ", e.getMessage());
             }
         }
-    };
+    }
 }

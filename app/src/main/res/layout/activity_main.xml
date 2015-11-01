@@ -27,7 +27,8 @@
         android:id="@+id/flashOnOffButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="66dp" />
+        android:layout_marginStart="66dp"
+        android:onClick="turnFlashlightOnOff" />
 
         <ImageView
             android:layout_width="82dp"
@@ -73,7 +74,8 @@
         android:layout_height="wrap_content"
         android:text="@string/show_lb_button_txt"
         android:id="@+id/openLightBoardButton"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:onClick="openLightBoard"/>
 
     <TextView
         android:layout_width="match_parent"

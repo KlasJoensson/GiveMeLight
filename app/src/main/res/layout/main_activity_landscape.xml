@@ -8,7 +8,8 @@
     android:background="@color/background_color"
     android:orientation="horizontal"
     tools:context="joensson.klas.givemelight.MainActivity"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:onClick="openLightBoard">
 
     <RelativeLayout
         android:orientation="vertical"
@@ -35,7 +36,8 @@
             android:id="@+id/flashOnOffButton"
             android:layout_below="@+id/textView2"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp" />
+            android:layout_marginTop="25dp"
+            android:onClick="turnFlashlightOnOff" />
 
         <ImageView
             android:layout_width="82dp"
@@ -89,7 +91,8 @@
                 android:id="@+id/openLightBoardButton"
                 android:layout_gravity="center_horizontal"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:onClick="openLightBoard" />
 
 
             <TextView
